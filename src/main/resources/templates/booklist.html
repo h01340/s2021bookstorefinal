@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head>
+<title>Bookstore with Spring Security</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<form th:action="@{/logout}" method="post">
+		<input type="submit" value="Sign Out" />
+	</form>
+	<h1>Kirjakaupan kirjat</h1>
+	<table>
+		<tbody>
+			<tr>
+				<td>Nimi</td>
+				<td>Kirjailija</td>
+				<td>Kirjakategoria</td>
+				<td></td>
+			</tr>
+
+			<tr th:each="book : ${books}">
+				<td th:text="${book.title}"></td>
+				<td th:text="${book.author}"></td>
+
+				<td><div th:if="${book.category != NULL}"
+						th:text="${book.category.name}"></div></td>
+				<td sec:authorize="hasAuthority('ADMIN')"><a th:href="@{/delete/{id}(id=${book.id})}">Poista</a></td>
+				<td sec:authorize="hasRole('ADMIN')"><a th:href="@{/edit/{id}(id=${book.id})}">Muokkaa</a></td>
+			</tr>
+	</table>
+	<a href="/addBook">Add Book</a>
+</body>
+</html>
